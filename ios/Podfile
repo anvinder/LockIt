@@ -23,6 +23,16 @@ target 'BleTest' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  # Add the base RNPermissions pod
+  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
+  
+  # Try to find the bluetooth permission podspec in different locations
+  if File.exist?('../node_modules/react-native-permissions/ios/BluetoothPeripheral')
+    pod 'Permission-BluetoothPeripheral', :path => '../node_modules/react-native-permissions/ios/BluetoothPeripheral'
+  elsif File.exist?('../node_modules/react-native-permissions/apple/BluetoothPeripheral')
+    pod 'Permission-BluetoothPeripheral', :path => '../node_modules/react-native-permissions/apple/BluetoothPeripheral'
+  end
+pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
