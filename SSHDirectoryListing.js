@@ -1,31 +1,15 @@
-
-
-
+import { SSH_CONFIG, STORAGE_KEYS } from './config'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { 
   Alert, 
   Platform 
 } from 'react-native';
 
-// Configuration for default SSH connection
-const DEFAULT_SSH_CONFIG = {
-  username: 'pi',
-  password: 'Cognizanceofcontemplation09!!',
-  port: 3003
-};
-
-
-
-// Storage keys
-const STORAGE_KEYS = {
-  DEVICE_IP: '@WiFiConfig:DeviceIP',
-  DEVICE_CONFIGURED: '@WiFiConfig:Configured'
-};
 
 export const saveDeviceConfiguration = async (ipAddress) => {
   try {
-    await AsyncStorage.setItem(STORAGE_KEYS.DEVICE_IP, ipAddress);
-    await AsyncStorage.setItem(STORAGE_KEYS.DEVICE_CONFIGURED, 'true');
+    await AsyncStorage.setItem(STORAGE_KEYS.deviceIp, ipAddress);
+    await AsyncStorage.setItem(STORAGE_KEYS.deviceConfigured, 'true');
     console.log('Device configuration saved successfully');
     return true;
   } catch (error) {
@@ -86,26 +70,27 @@ export const listHomeDirectory = async (ipAddress = null) => {
   try {
     // If no IP provided, try to get stored IP
     if (!ipAddress) {
-      ipAddress = await AsyncStorage.getItem(STORAGE_KEYS.DEVICE_IP);
+      ipAddress = await AsyncStorage.getItem(STORAGE_KEYS.deviceIp);
       
       if (!ipAddress) {
         throw new Error('No IP address provided or stored');
       }
     }
 
+
     // Build the request payload
     const payload = {
       host: ipAddress,
-      port: DEFAULT_SSH_CONFIG.port,
-      username: DEFAULT_SSH_CONFIG.username,
-      password: DEFAULT_SSH_CONFIG.password,
-      path: `/home/${DEFAULT_SSH_CONFIG.username}`
+      port: SSH_CONFIG.port,
+      username: SSH_CONFIG.username,
+      password: SSH_CONFIG.password,
+      path: `/home/${SSH_CONFIG.username}`
     };
 
     console.log('SSH Directory Listing Payload:', payload);
 
-    // Make the API call to list directory contents
-    const response = await fetch('http://10.0.0.188:3000/ls', {
+    // Make the API call to list directory contents - use the device IP
+    const response = await fetch(`http://${ipAddress}:3001/ls`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -32,7 +32,19 @@ target 'BleTest' do
   elsif File.exist?('../node_modules/react-native-permissions/apple/BluetoothPeripheral')
     pod 'Permission-BluetoothPeripheral', :path => '../node_modules/react-native-permissions/apple/BluetoothPeripheral'
   end
-pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  
+  # Add vector icons for UI elements
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  
+  # Add file system access for SFTP functionality
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+  
+  # Add camera roll access for saving media files
+  pod 'react-native-cameraroll', :path => '../node_modules/@react-native-camera-roll/camera-roll'
+  
+  # Add document picker for file selection
+  pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
+  
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
